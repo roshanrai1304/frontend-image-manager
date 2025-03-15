@@ -2,8 +2,10 @@ import axios from 'axios';
 
 // Create an axios instance with base URL
 const api = axios.create({
-  // baseURL: 'http://localhost:5000/api', // Replace with your actual API URL
-  baseURL: 'http://18.190.207.23:5000/api',
+  // Use relative URL in development, which will be proxied
+  baseURL: 'https://backend-image-manager-1.onrender.com/api',
+  // For production, you might want to use environment variables
+  // baseURL: import.meta.env.PROD ? 'https://backend-image-manager-1.onrender.com/' : '/api',
 });
 
 // Add a request interceptor to include auth token
