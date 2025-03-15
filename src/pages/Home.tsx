@@ -30,6 +30,7 @@ const Home: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [images, setImages] = useState<Image[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
   const navigate = useNavigate();
 
   const fetchImages = useCallback(async () => {
@@ -59,13 +60,20 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const currentUser = await getCurrentUser();
-      if (!currentUser) {
+      try {
+        const currentUser = await getCurrentUser();
+        if (!currentUser) {
+          navigate('/login');
+          return;
+        }
+        setUser(currentUser);
+        fetchImages();
+      } catch (error) {
+        console.error("Auth check error:", error);
         navigate('/login');
-        return;
+      } finally {
+        setIsAuthChecking(false);
       }
-      setUser(currentUser);
-      fetchImages();
     };
     
     checkAuth();
@@ -91,6 +99,10 @@ const Home: React.FC = () => {
       )
     );
   }, []);
+
+  if (isAuthChecking) {
+    return <div>Checking authentication...</div>;
+  }
 
   if (!user) {
     return null; // Will redirect to login

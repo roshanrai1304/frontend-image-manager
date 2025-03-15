@@ -3,7 +3,7 @@ import axios from 'axios';
 // Create an axios instance with base URL
 const api = axios.create({
   // baseURL: 'http://localhost:5000/api', // Replace with your actual API URL
-  baseURL: 'https://backend-image-manager.onrender.com/api',
+  baseURL: 'http://18.190.207.23:5000/api',
 });
 
 // Add a request interceptor to include auth token
@@ -26,7 +26,14 @@ api.interceptors.response.use(
     // If the response contains image data with S3 URLs
     if (response.data && response.data.images && Array.isArray(response.data.images)) {
       // Map the backend field names to match your frontend Image type
-      response.data = response.data.images.map(item => ({
+      response.data = response.data.images.map((item: {
+        id: number | string;
+        s3_url: string;
+        original_filename?: string;
+        ai_description?: string;
+        user_id: number | string;
+        uploaded_at: string;
+      }) => ({
         id: String(item.id), // Convert to string if your type expects string IDs
         url: item.s3_url,
         title: item.original_filename || 'Untitled',
