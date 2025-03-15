@@ -36,16 +36,13 @@ const Home: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await api.get('/images');
-      console.log('Raw response in Home:', response.data);
       
       // Check if response.data is already an array (transformed by interceptor)
       if (Array.isArray(response.data)) {
-        console.log('Images fetched successfully (transformed):', response.data);
         setImages(response.data);
       } 
       // Check if response.data.images exists and is an array
       else if (response.data && Array.isArray(response.data.images)) {
-        console.log('Images fetched successfully (original):', response.data.images);
         setImages(response.data.images);
       } 
       else {
